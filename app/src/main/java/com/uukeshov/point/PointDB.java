@@ -21,12 +21,13 @@ class PointDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table pointstable (id integer primary key autoincrement,pointname text,pointLat text,pointLon text);");
+        db.execSQL("create table pointstable (id integer primary key autoincrement,pointid text, pointname text,pointLat text,pointLon text);");
     }
 
     public void addPoint(Point point) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
+        cv.put("pointid", point.get_pointName());
         cv.put("pointname", point.get_pointName());
         cv.put("pointLat", point.get_pointLat());
         cv.put("pointLon", point.get_pointLon());
@@ -45,14 +46,21 @@ class PointDB extends SQLiteOpenHelper {
                 Point point = new Point();
                 point.set_pointID(Integer.valueOf(cursor.getString(0)));
                 point.set_pointName(cursor.getString(1));
-                point.set_pointLat(cursor.getDouble(2));
-                point.set_pointLon(cursor.getDouble(3));
+                point.set_pointName(cursor.getString(2));
+                point.set_pointLat(cursor.getDouble(3));
+                point.set_pointLon(cursor.getDouble(4));
                 noteList.add(point);
           //      Log.d(LOG_TAG, "--- onCreate database ---" + note);
             } while (cursor.moveToNext());
         }
         db.close();
         return noteList;
+    }
+
+    public void deleteAllPoints() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + "pointstable");
+        db.close();
     }
 
 

@@ -1,21 +1,14 @@
 package com.uukeshov.point;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
-
-import java.io.IOException;
-import java.io.StringReader;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -24,7 +17,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,7 +24,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import android.os.AsyncTask;
+import java.io.IOException;
+import java.io.StringReader;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity {
     final String LOG_TAG = "MapsLog";
@@ -45,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().hide();
         downloadPage();
+
 
     }
 
@@ -88,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
             HttpClient httpclient = new DefaultHttpClient();
             PointDB db = new PointDB(MainActivity.this);
+            db.deleteAllPoints();
 
             HttpPost httppost = new HttpPost("http://doshcard.kg:8080/GetPoints");
 
@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
                     doc = (Document) builder.parse(inputSource);
                     doc.getDocumentElement().normalize();
                     NodeList nodeLst = doc.getElementsByTagName("point");
-
 
                     for (int s = 0; s < nodeLst.getLength(); s++) {
 
@@ -150,16 +149,16 @@ public class MainActivity extends AppCompatActivity {
 
                             Point point = new Point(
 
+                                    ((Node) fstNm.item(0)).getNodeValue().toString(),
+
                                     ((Node) secNm.item(0)).getNodeValue().toString(),
 
                                     ((Node) thrdNm.item(0)).getNodeValue().toString(),
 
-                                    ((Node) frNm.item(0)).getNodeValue().toString(),
-
                                     ((Node) frNm.item(0)).getNodeValue().toString());
+
                             db.addPoint(point);
                         }
-
                     }
 
                 } catch (SAXException ex) {
@@ -182,10 +181,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             progressBar.setProgress(0);
-
+            Intent i = new Intent(getApplicationContext(), MapsActivity.class);
+            startActivity(i);
         }
     }
-
 
     //----------
     @Override
@@ -204,7 +203,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.about) {
-            return true;
+            Intent it = new Intent(this, AboutActivity.class);
+            startActivity(it);
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -10,7 +10,7 @@ public class Point {
     Double _pointLon;
     Double _pointLat;
 
-    public Point(){
+    public Point() {
     }
 
     public Point(int pointID, Double pointLat, Double pointLon, String pointName) {
@@ -19,6 +19,14 @@ public class Point {
         this._pointLon = pointLon;
         this._pointName = pointName;
     }
+
+    public Point(String pointId,String pointName, String pointLat, String pointLon) {
+        this._pointID = Integer.parseInt(pointId);
+        this._pointLat = Double.parseDouble(pointLat);
+        this._pointLon = Double.parseDouble(pointLon);
+        this._pointName = pointName;
+    }
+
 
     public int get_pointID() {
         return _pointID;
@@ -51,6 +59,7 @@ public class Point {
     public void set_pointLat(Double _pointLat) {
         this._pointLat = _pointLat;
     }
+
 
     @Override
     public String toString() {
