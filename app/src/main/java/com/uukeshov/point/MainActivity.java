@@ -150,11 +150,8 @@ public class MainActivity extends AppCompatActivity {
                             Point point = new Point(
 
                                     ((Node) fstNm.item(0)).getNodeValue().toString(),
-
                                     ((Node) secNm.item(0)).getNodeValue().toString(),
-
                                     ((Node) thrdNm.item(0)).getNodeValue().toString(),
-
                                     ((Node) frNm.item(0)).getNodeValue().toString());
 
                             db.addPoint(point);
